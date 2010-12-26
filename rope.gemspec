@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
   s.name        = "rope"
   s.version     = Rope::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
+  s.authors     = ["Andy Lindeman"]
+  s.email       = ["alindeman@gmail.com"]
   s.homepage    = "http://rubygems.org/gems/rope"
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Pure Ruby implementation of a Rope data structure}
+  s.description = %q{A Rope is a convenient data structure for manipulating large amounts of text.  This implementation is inspired by http://www.rubyquiz.com/quiz137.html and https://rubygems.org/gems/cord}
 
   s.rubyforge_project = "rope"
 
