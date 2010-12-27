@@ -10,6 +10,7 @@ Using a *Rope* instance over a *String* may be desirable in applications that ma
 
 Planned features for *rope*:
 * Ability to view a function producing characters as a Rope (including I/O operations).  For instance, a piece of a Rope may be a 100MB file, but is only read when that section of the string is examined.  Concatenating to the end of that Rope does not involve reading the entire file.
+* Implement a *Rope* counterpart to every immutable method available on the *String* class.
 
 Disadvantages of *rope*:
 * Single character replacements are expensive
