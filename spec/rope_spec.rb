@@ -54,27 +54,6 @@ describe "rope" do
     end
   end
 
-  describe "#<<" do
-    it "should allow appending of two Rope instances" do
-      rope = "123".to_rope
-      rope << "456".to_rope
-
-      rope.to_s.should == "123456"
-    end
-
-    it "should allow appending of a Rope and a String" do
-      rope = "123".to_rope
-      rope << "456"
-
-      rope.to_s.should == "123456"
-    end
-
-    it "should allow appending of many Rope instances" do
-      rope_combined = ["123", "456", "789", "012"].inject(Rope::Rope.new) { |combined, str| combined << str.to_rope }
-      rope_combined.to_s.should == "123456789012"
-    end
-  end
-
   describe "#slice" do
     it "should correctly return a slice for a Rope instance created with a String" do
       rope = "12345".to_rope
@@ -84,7 +63,7 @@ describe "rope" do
     end
 
     it "should correctly return a slice for a Rope instance created by concatenating other Rope instances" do
-      rope = ["123", "456", "789", "012"].inject(Rope::Rope.new) { |combined, str| combined << str.to_rope }
+      rope = ["123", "456", "789", "012"].inject(Rope::Rope.new) { |combined, str| combined += str.to_rope }
       rope_slice = rope.slice(2, 6)
 
       rope_slice.to_s.should == "345678"

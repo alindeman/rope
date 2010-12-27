@@ -28,12 +28,6 @@ module Rope
       Rope.new(concatenate(other))
     end
 
-    # Appends another rope or string to this rope
-    def <<(other)
-      @root = concatenate(other)
-      self
-    end
-
     # Tests whether this rope is equal to another rope
     def ==(other)
       to_s == other.to_s
