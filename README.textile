@@ -1,3 +1,5 @@
+p{color:red}. *rope* is still under early development.  Check it out if you wish to follow my progress or help, but do not use it in your applications (yet!).
+
 *rope* is a pure Ruby implementation of the "Rope data structure":http://en.wikipedia.org/wiki/Rope_%28computer_science%29.
 
 For many applications, the *Rope* class can be a drop-in replacement for *String* that is optimized for certain use cases.
