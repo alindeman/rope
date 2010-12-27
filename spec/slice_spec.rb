@@ -4,7 +4,7 @@ require 'rope'
 describe "rope" do
   describe "#slice" do
     context "Fixnum, Fixnum" do # slice(Fixnum, Fixnum)
-      it "should correctly return a slice for a Rope instance created with a String" do
+      it "should return a slice for a Rope instance created with a String" do
         rope = "12345".to_rope
         rope_slice = rope.slice(0, 2)
 
@@ -12,7 +12,7 @@ describe "rope" do
         rope_slice.class.should == Rope::Rope
       end
 
-      it "should correctly return a slice for a Rope instance created by concatenating other Rope instances" do
+      it "should return a slice for a Rope instance created by concatenating other Rope instances" do
         rope = ["123", "456", "789", "012"].inject(Rope::Rope.new) { |combined, str| combined += str.to_rope }
         rope_slice = rope.slice(2, 6)
 
@@ -20,7 +20,7 @@ describe "rope" do
         rope_slice.class.should == Rope::Rope
       end
 
-      it "should correctly return a slice when given a negative index" do
+      it "should return a slice when given a negative index" do
         rope = ["123", "456", "789", "012"].inject(Rope::Rope.new) { |combined, str| combined += str.to_rope }
         rope_slice = rope.slice(-8, 6)
 
@@ -48,6 +48,35 @@ describe "rope" do
 
       it "should return a Fixnum instance" do
         "12345".slice(0).class.should == Fixnum
+      end
+    end
+
+    context "Range" do # slice(Range)
+      it "should return a slice for a Rope when given a Range" do
+        rope = ["123", "456", "789", "012"].inject(Rope::Rope.new) { |combined, str| combined += str.to_rope }
+
+        rope.slice(0..2).to_s.should == "123"
+        rope.slice(0...2).to_s.should == "12"
+      end
+
+      it "should return a slice for a Rope when given a Range that exercises edge cases" do
+        rope = ["123", "456", "789", "012"].inject(Rope::Rope.new) { |combined, str| combined += str.to_rope }
+
+        rope.slice(5..5).to_s.should == "6"
+        rope.slice(5...5).to_s.should == ""
+        rope.slice(0...0).to_s.should == ""
+      end
+
+      it "should return a slice for a Rope when given a Range that contains negative indices" do
+        rope = ["123", "456", "789", "012"].inject(Rope::Rope.new) { |combined, str| combined += str.to_rope }
+
+        rope.slice(-4..-2).to_s.should == "901"
+        rope.slice(-4...-2).to_s.should == "90"
+      end
+
+      it "should return an empty Rope when given a Range where the first index is greater than the last index" do
+        "1234567".slice(4..2).to_s.should be_empty
+        "1234567".slice(-2..-4).to_s.should be_empty
       end
     end
   end

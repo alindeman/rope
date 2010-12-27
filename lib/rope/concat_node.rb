@@ -26,6 +26,27 @@ module Rope
       if args.length == 0
         if arg0.is_a?(Fixnum)
           char_at(arg0)
+        elsif arg0.is_a?(Range)
+          from, to = arg0.minmax
+
+          # Special case when the range doesn't actually describe a valid range
+          return "" if from.nil? || to.nil?
+
+          # Normalize so both from and to are positive indices
+          if from < 0
+            from += @length
+          end
+          if to < 0
+            to += @length
+          end
+
+          if from <= to
+            subtree(from, (to - from) + 1)
+          else
+            # Range first is greater than range last
+            # Return empty string to match what String does
+            ""
+          end
         end
 
         # TODO: arg0.is_a?(Range)
