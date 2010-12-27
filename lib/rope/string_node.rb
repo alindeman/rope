@@ -9,9 +9,11 @@ module Rope
     end
 
     def subtree(from, length)
-      return self if length == @data.length
-
-      StringNode.new(@data.slice(from, length))
+      if length == @data.length
+        self
+      else
+        StringNode.new(@data.slice(from, length))
+      end
     end
   end
 end
