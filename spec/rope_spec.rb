@@ -68,5 +68,12 @@ describe "rope" do
 
       rope_slice.to_s.should == "345678"
     end
+
+    it "should correctly return a slice when given a negative index" do
+      rope = ["123", "456", "789", "012"].inject(Rope::Rope.new) { |combined, str| combined += str.to_rope }
+      rope_slice = rope.slice(-8, 6)
+
+      rope_slice.to_s.should == "567890"
+    end
   end
 end

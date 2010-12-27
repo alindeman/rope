@@ -43,7 +43,10 @@ module Rope
 
     # Returns a node that represents a slice of this tree
     def subtree(from, length)
-      # TODO: This likely can be refactored
+      # Translate to positive index if given a negative one
+      if from < 0
+        from += @length
+      end
 
       # If more than @length characters are requested, truncate
       length = [(@length - from), length].min

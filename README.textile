@@ -61,5 +61,6 @@ A *Rope* instance offers efficient substring operations.  The *slice* and *[]* m
 rope = "123456789".to_rope
 
 puts rope.slice(3, 4) # 4567
+puts rope.slice(-6, 4) # 4567
 # TODO: More examples when they are implemented
 </pre>
