@@ -29,11 +29,37 @@ gem install rope
 gem 'rope'
 </pre>
 
+*rope* is tested against MRI 1.8.7 and 1.9.2.
+
 h1. Usage
+
+h2. Creating a Rope
 
 <pre>
 rope = "123456789".to_rope # Rope::Rope.new("123456789") also works
 
 puts rope # "123456789"
-puts rope.slice(3, 4) # "4567"
+</pre>
+
+h2. Concatenation
+
+A *Rope* instance can be concatenated with another *Rope* or *String* instance.
+
+<pre>
+rope = "12345"
+string = "6789"
+
+rope += string
+puts rope # "123456789"
+</pre>
+
+h2. Slices/Substrings
+
+A *Rope* instance offers efficient substring operations.  The *slice* and *[]* methods are synonymous with their "String counterparts (Ruby API documentation)":http://ruby-doc.org/core-1.9/classes/String.html#M000293
+
+<pre>
+rope = "123456789".to_rope
+
+puts rope.slice(3, 4) # 4567
+# TODO: More examples when they are implemented
 </pre>
