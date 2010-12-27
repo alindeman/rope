@@ -14,7 +14,7 @@ module Rope
     # Initializes a new rope
     def initialize(arg=nil)
       case arg
-      when LeafNode, ConcatenationNode
+      when Node
         @root = arg
       when NilClass
         @root = StringNode.new("")

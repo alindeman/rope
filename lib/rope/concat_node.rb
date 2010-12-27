@@ -1,15 +1,11 @@
+require 'rope/node'
+
 module Rope
-  # Specifies an interior node.  To gets its data, its children are recursively
-  # combined.
-  class ConcatenationNode
+  # Specifies an interior node.  Its underlying data is retrieved by combining
+  # its children recursively.
+  class ConcatenationNode < Node
     # Left and right nodes
     attr_reader :left, :right
-
-    # Length of the data associated with this node as its root
-    attr_reader :length
-
-    # Depth of the tree with this node as its root
-    attr_reader :depth
 
     # Initializes a new concatenation node.
     def initialize(left, right)
@@ -20,17 +16,12 @@ module Rope
       @depth = [left.depth, right.depth].max + 1
     end
 
-    # Concatenates this node with another (non-destructive)
-    def +(other)
-      ConcatenationNode.new(self, other)
+    # Gets the underlying data in the tree
+    def data
+      left.data + right.data
     end
 
-    # Gets the string data for the node
-    def to_s
-      # TODO: Can this be memoized somehow?
-      left.to_s + right.to_s
-    end
-
+    # Gets a slice of the underlying data in the tree
     def slice(arg0, *args)
       if args.length == 0
         # TODO: arg0.is_a?(Fixnum)
@@ -45,13 +36,12 @@ module Rope
       end
     end
 
-    # Rebalance the tree with this node as its root
+    # Rebalances this tree
     def rebalance!
       # TODO
     end
 
-    # Returns a concatenation node that represents a slice of this rope.
-    # Attempts to reuse nodes in this rope if possible.
+    # Returns a node that represents a slice of this tree
     def subtree(from, length)
       # TODO: This likely can be refactored
 
@@ -69,7 +59,7 @@ module Rope
       rlen = length - llen
       if rlen > 0
         # Requested subtree overlaps both the left and the right subtree
-        ConcatenationNode.new(@left.subtree(from, llen), @right.subtree(0, rlen))
+        @left.subtree(from, llen) + @right.subtree(0, rlen)
       else
         # Requested subtree is entirely in the left subtree
         @left.subtree(from, length)
