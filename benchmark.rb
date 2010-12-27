@@ -1,18 +1,19 @@
 # Benchmarking code from
 # http://www.rubyquiz.com/quiz137.html
 
+# Compare:
+# ruby benchmark.rb
+# ruby -r lib/rope.rb -I lib benchmark.rb Rope::Rope
+
 require 'benchmark'
 
 #This code make a String/Rope of CHUNCKS chunks of text
 #each chunck is SIZE bytes long. Each chunck starts with
 #an 8 byte number. Initially the chuncks are shuffled the
 #qsort method sorts them into ascending order.
-#
-#pass the name of the class to use as a parameter
-#ruby -r rope.rb this_file Rope
 
 puts 'preparing data...'
-TextClass = eval(ARGV.shift || :String)
+TextClass = eval(ARGV.shift || "String")
 
 def qsort(text)
   return TextClass.new if text.length == 0
