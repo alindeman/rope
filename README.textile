@@ -55,7 +55,7 @@ puts rope # "123456789"
 
 h2. Slices/Substrings
 
-A *Rope* instance offers efficient substring operations.  The *slice* and *[]* methods are synonymous with their "String counterparts (Ruby API documentation)":http://ruby-doc.org/core-1.9/classes/String.html#M000293
+A *Rope* instance offers efficient substring operations.  The *slice* and *[]* methods are synonymous with their "String counterparts (Ruby API documentation)":http://ruby-doc.org/core-1.9/classes/String.html#M000293.
 
 <pre>
 rope = "123456789".to_rope
