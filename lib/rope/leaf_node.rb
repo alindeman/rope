@@ -9,7 +9,7 @@ module Rope
     # attribute may be generated on-the-fly.
     attr_reader :data
 
-    def_delegators :data, :length, :slice, :[]
+    def_delegators :data, :length, :slice
 
     # Gets the depth of the tree with this node as the root.  Since this is
     # a leaf node, the depth is 0.

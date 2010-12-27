@@ -9,7 +9,7 @@ module Rope
   class Rope
     extend Forwardable
 
-    def_delegators :@root, :to_s, :length
+    def_delegators :@root, :to_s, :length, :rebalance!
 
     # Initializes a new rope
     def initialize(arg=nil)
@@ -42,6 +42,11 @@ module Rope
     # Creates a copy of this rope
     def dup
       Rope.new(root)
+    end
+
+    # Gets a slice of this rope
+    def slice(*args)
+      Rope.new(root.slice(*args))
     end
 
     protected

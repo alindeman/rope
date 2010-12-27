@@ -7,5 +7,11 @@ module Rope
     def initialize(string)
       @data = string
     end
+
+    def subtree(from, length)
+      return self if length == @data.length
+
+      StringNode.new(@data.slice(from, length))
+    end
   end
 end
