@@ -1,0 +1,18 @@
+h1. rope
+
+*Rope* is a pure Ruby implementation of the "Rope data structure":http://en.wikipedia.org/wiki/Rope_%28computer_science%29
+
+For many applications, *Rope* can be a drop-in replacement for the *String* class that is optimized for certain use cases.
+
+Using a *Rope* instance over a *String* is desirable in applications that manipulate large amounts of text.
+
+*Rope* currently offers:
+* Fast string concatenation and substring operations involving large strings
+* Immutability, which is desirable for functional programming techniques or multithreaded applicatoins
+
+Planned features for *Rope*:
+* Ability to view a function producing characters as a Rope (including I/O operations).  For instance, a piece of a Rope may be a 100MB file, but is only read when that section of the string is examined.  Concatenating to the end of that Rope does not involve reading the entire file.
+
+Disadvantages of *Rope*:
+* Single character replacements are expensive
+* Iterating character-by-character is slightly more expensive than in a String (TODO: how much? .. haven't implemented iterators yet)
