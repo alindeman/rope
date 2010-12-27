@@ -31,7 +31,12 @@ module Rope
       else
         arg1 = args[0] # may be slightly confusing; refer to method definition
         if arg0.is_a?(Fixnum) && arg1.is_a?(Fixnum) # Fixnum, Fixnum
-          subtree(arg0, arg1)
+          if arg1 >= 0
+            subtree(arg0, arg1)
+          else
+            # Negative length, return nil to match what String does
+            nil
+          end
         end
       end
     end

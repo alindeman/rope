@@ -75,5 +75,13 @@ describe "rope" do
 
       rope_slice.to_s.should == "567890"
     end
+
+    it "should return nil when given a negative length" do
+      "1234567".to_rope.slice(2, -1).should be_nil
+    end
+
+    it "should return an empty string when given a 0 length" do
+      "1234567".to_rope.slice(2, 0).to_s.should be_empty
+    end
   end
 end

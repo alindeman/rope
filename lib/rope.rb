@@ -40,7 +40,12 @@ module Rope
 
     # Gets a slice of this rope
     def slice(*args)
-      Rope.new(root.slice(*args))
+      subtree = root.slice(*args)
+      if subtree
+        Rope.new(subtree)
+      else
+        nil
+      end
     end
 
     protected
