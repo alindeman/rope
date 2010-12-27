@@ -24,7 +24,10 @@ module Rope
     # Gets a slice of the underlying data in the tree
     def slice(arg0, *args)
       if args.length == 0
-        # TODO: arg0.is_a?(Fixnum)
+        if arg0.is_a?(Fixnum)
+          char_at(arg0)
+        end
+
         # TODO: arg0.is_a?(Range)
         # TODO: arg0.is_a?(Regexp)
         # TODO: arg0.is_a?(String)
@@ -38,6 +41,8 @@ module Rope
             nil
           end
         end
+
+        # TODO: arg0.is_a?(Regexp) && arg1.is_a?(Fixnum)
       end
     end
 
@@ -71,6 +76,26 @@ module Rope
       else
         # Requested subtree is entirely in the left subtree
         @left.subtree(from, length)
+      end
+    end
+
+    # Returns the character at the specified index
+    def char_at(index)
+      # Translate to positive index if given a negative one
+      if index < 0
+        index += @length
+      end
+
+      # Falls outside bounds
+      return nil if index >= @length
+
+      rindex = index - @left.length
+      if rindex < 0
+        # Requested index is in the left subtree
+        @left.char_at(index)
+      else
+        # Requested index is in the right subtree
+        @right.char_at(rindex)
       end
     end
   end

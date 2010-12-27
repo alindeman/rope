@@ -40,13 +40,18 @@ module Rope
 
     # Gets a slice of this rope
     def slice(*args)
-      subtree = root.slice(*args)
-      if subtree
-        Rope.new(subtree)
+      slice = root.slice(*args)
+
+      case slice
+      when Fixnum # slice(Fixnum) returns a plain Fixnum
+        slice
+      when Node, String # create a new Rope with the returned tree as the root
+        Rope.new(slice)
       else
         nil
       end
     end
+    alias :[] :slice
 
     protected
       # Root node (could either be a StringNode or some child of LeafNode)

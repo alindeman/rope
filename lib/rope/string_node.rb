@@ -8,6 +8,7 @@ module Rope
     extend Forwardable
 
     def_delegators :@data, :slice
+    def_delegator :@data, :slice, :char_at
 
     # Initializes a node that contains a basic string
     def initialize(string)
