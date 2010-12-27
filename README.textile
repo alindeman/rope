@@ -1,18 +1,39 @@
-h1. rope
+*rope* is a pure Ruby implementation of the "Rope data structure":http://en.wikipedia.org/wiki/Rope_%28computer_science%29.
 
-*Rope* is a pure Ruby implementation of the "Rope data structure":http://en.wikipedia.org/wiki/Rope_%28computer_science%29
+For many applications, the *Rope* class can be a drop-in replacement for *String* that is optimized for certain use cases.
 
-For many applications, *Rope* can be a drop-in replacement for the *String* class that is optimized for certain use cases.
+Using a *Rope* instance over a *String* may be desirable in applications that manipulate large amounts of text.
 
-Using a *Rope* instance over a *String* is desirable in applications that manipulate large amounts of text.
-
-*Rope* currently offers:
+*rope* currently offers:
 * Fast string concatenation and substring operations involving large strings
-* Immutability, which is desirable for functional programming techniques or multithreaded applicatoins
+* Immutability, which is desirable for functional programming techniques or multithreaded applications
 
-Planned features for *Rope*:
+Planned features for *rope*:
 * Ability to view a function producing characters as a Rope (including I/O operations).  For instance, a piece of a Rope may be a 100MB file, but is only read when that section of the string is examined.  Concatenating to the end of that Rope does not involve reading the entire file.
 
-Disadvantages of *Rope*:
+Disadvantages of *rope*:
 * Single character replacements are expensive
 * Iterating character-by-character is slightly more expensive than in a String (TODO: how much? .. haven't implemented iterators yet)
+
+h1. Installation
+
+*rope* is hosted on "rubygems":http://www.rubygems.org/
+
+<pre>
+gem install rope
+</pre>
+
+... or in your Gemfile
+
+<pre>
+gem 'rope'
+</pre>
+
+h1. Usage
+
+<pre>
+rope = "123456789".to_rope # Rope::Rope.new("123456789") also works
+
+puts rope # "123456789"
+puts rope.slice(3, 4) # "4567"
+</pre>
