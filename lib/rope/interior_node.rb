@@ -1,9 +1,9 @@
-require 'rope/node'
+require 'rope/basic_node'
 
 module Rope
   # Specifies an interior node.  Its underlying data is retrieved by combining
   # its children recursively.
-  class ConcatenationNode < Node
+	class InteriorNode < BasicNode
     # Left and right nodes
     attr_reader :left, :right
 
@@ -25,12 +25,12 @@ module Rope
     def slice(arg0, *args)
       if args.length == 0
         if arg0.is_a?(Fixnum)
-          char_at(arg0)
+          slice(arg0, 1)
         elsif arg0.is_a?(Range)
           from, to = arg0.minmax
 
           # Special case when the range doesn't actually describe a valid range
-          return "" if from.nil? || to.nil?
+          return nil if from.nil? || to.nil?
 
           # Normalize so both from and to are positive indices
           if from < 0
@@ -45,7 +45,7 @@ module Rope
           else
             # Range first is greater than range last
             # Return empty string to match what String does
-            ""
+            raise "TODO"
           end
         end
 
@@ -100,8 +100,7 @@ module Rope
       end
     end
 
-    # Returns the character at the specified index
-    def char_at(index)
+    def segment(index)
       # Translate to positive index if given a negative one
       if index < 0
         index += @length
@@ -113,12 +112,11 @@ module Rope
       rindex = index - @left.length
       if rindex < 0
         # Requested index is in the left subtree
-        @left.char_at(index)
+        @left.segment(index)
       else
         # Requested index is in the right subtree
-        @right.char_at(rindex)
+        @right.segment(rindex)
       end
     end
   end
 end
-
