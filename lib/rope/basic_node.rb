@@ -30,5 +30,10 @@ module Rope
     	raise NotImplementedError
     end
 
+    #Swaps out the data in this node to be rhs. Must be same length
+    def replace!(index, length, rhs)
+    	raise NotImplementedError
+    end
+
 	end
 end

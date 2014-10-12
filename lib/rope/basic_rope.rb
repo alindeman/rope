@@ -18,19 +18,29 @@ module Rope
 	class BasicRope
     extend Forwardable
 
+    def self.rope_for_type(type, &block)
+    	Class.new(self) do
+    		define_method :primitive_type do
+    			type
+    		end
+    		
+    		class_eval &block if block_given?
+    	end
+    end
+
     # Initializes a new rope
     def initialize(arg=nil)
       case arg
       when BasicNode
         @root = arg
       when NilClass
-        @root = LeafNode.new(data_type.new)
-      when data_type
+        @root = LeafNode.new(primitive_type.new)
+      when primitive_type
       	@root = LeafNode.new(arg)
       when self.class, InteriorNode
       	@root = LeafNode.new(arg.to_primitive)
       else
-        raise ArgumentError, "#{arg} is not a #{data_type}"
+        raise ArgumentError, "#{arg} is not a #{primitive_type}"
       end
     end
 
@@ -58,13 +68,18 @@ module Rope
       case slice
       when Fixnum # slice(Fixnum) returns a plain Fixnum
         slice
-      when BasicNode, data_type # create a new Rope with the returned tree as the root
+      when BasicNode, primitive_type # create a new Rope with the returned tree as the root
         self.class.new(slice)
       else
         nil
       end
     end
     alias :[] :slice
+
+    def []=(index, length=1, rhs)
+    	@root = @root.replace!(index, length, rhs)
+    	self
+    end
 
     protected
 
@@ -78,14 +93,14 @@ module Rope
     def concatenate(other)
       # TODO: Automatically balance the tree if needed
       case other
-      when data_type
+      when primitive_type
         InteriorNode.new(root, LeafNode.new(other))
       when Rope
         InteriorNode.new(root, other.root)
       end
     end
 
-    def data_type
+    def primitive_type
     	raise NotImplementedError, "This method must return the data type stored in the rope"
     end
 

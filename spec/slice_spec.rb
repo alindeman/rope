@@ -1,7 +1,7 @@
 
 require 'rope'
 
-describe "rope" do
+describe Rope::Rope do
   describe "#slice" do
     context "Fixnum, Fixnum" do # slice(Fixnum, Fixnum)
       it "should return a slice for a Rope instance created with a String" do

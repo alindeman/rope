@@ -5,13 +5,7 @@ require 'rope/basic_rope'
 require 'rope/string_methods'
 
 module Rope
-  class Rope < BasicRope
-
-    #Defines the kind of rope we're working with
-    def data_type
-      String
-    end
-
+  Rope = BasicRope.rope_for_type(String) do
     #
     # Special case for string Ropes since to_s is universal
     #

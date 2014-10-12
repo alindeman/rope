@@ -100,23 +100,50 @@ module Rope
       end
     end
 
-    def segment(index)
+    #
+    # Overwrites data at index with substr
+    #
+    # Returns self, however leaf nodes may return a new interior node if the replace! causes a leaf to be split
+    #
+    def replace!(index, length, substr)
       # Translate to positive index if given a negative one
       if index < 0
         index += @length
       end
 
-      # Falls outside bounds
-      return nil if index >= @length
-
       rindex = index - @left.length
-      if rindex < 0
-        # Requested index is in the left subtree
-        @left.segment(index)
+      if(index == 0 && length == @left.length)
+      	#substr exactly replaces left sub-tree
+      	@left = LeafNode.new(substr)
+      elsif(index == @left.length && length == @right.length)
+      	#substr exactly replaces right sub-tree
+      	@right = LeafNode.new(substr)
+      elsif rindex < 0
+      	if(index + length <= @left.length)
+      		#Replacement segment is a subsection of the left tree
+	        
+	        #Requested index is in the left subtree, and a split may occur
+	        @left = @left.replace!(index, length, substr)
+      	else
+	      	#Replacement segement is a subsection of left tree along with a subsection of the right tree
+	      	left_count = @left.length - index
+
+	      	@left = InteriorNode.new(
+	      		@left.subtree(0, index),
+	      		LeafNode.new(substr)
+	      	)
+	      	@right = @right.subtree(rindex + length, @right.length - (rindex + length))
+	      end
       else
-        # Requested index is in the right subtree
-        @right.segment(rindex)
+        # Requested index is in the right subtree, and a split may occur
+        @right = @right.replace!(rindex, length, substr)
+        # Rope may get longer
+        @length = @left.length + @right.length 
       end
+
+      #Length could have changed if the substr replaced a section of a different size or there was an append
+    	@length = @left.length + @right.length
+      self
     end
   end
 end
