@@ -142,7 +142,8 @@ module Rope
       end
 
       #Length could have changed if the substr replaced a section of a different size or there was an append
-    	@length = @left.length + @right.length
+      @length = @left.length + @right.length
+      @depth = [left.depth, right.depth].max + 1
       self
     end
   end
