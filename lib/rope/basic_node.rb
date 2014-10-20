@@ -6,9 +6,6 @@ module Rope
     # Depth of the tree
     attr_reader :depth
 
-    # The underlying data in the tree
-    attr_reader :data
-
     # Concatenates this tree with another tree (non-destructive to either
     # tree)
     def +(other)

@@ -8,12 +8,8 @@ module Rope
 	#
 	# * length - integer length of a unit of the data type
 	# * slice - break a unit of the data type into two pieces on an index boundary
-	#x * + - join two pieces of the data type together
-	# * concat - append one object of the type to another (mutative)
-	#
-	# BasicRopes may also be sparse if the data store supports: 
-	#
-	# * TODO
+	# * + - join two pieces of the data type together
+	# * [] - alias for slice
 	#
 	class BasicRope
     extend Forwardable
@@ -58,6 +54,7 @@ module Rope
 
     # Creates a copy of this rope
     def dup
+      root.freeze #Prevents errors when 
       self.class.new(root)
     end
 
@@ -95,7 +92,7 @@ module Rope
       case other
       when primitive_type
         InteriorNode.new(root, LeafNode.new(other))
-      when Rope
+      when BasicRope
         InteriorNode.new(root, other.root)
       end
     end

@@ -33,5 +33,14 @@ describe Rope::Rope do
 				end
 			end
 		end
+
+		it "doesn't alias" do
+			r1 = "foo".to_rope + "bar" + "baz"
+			r2 = r1.dup
+
+			r2[0,3] = "baz"
+
+			expect(r2).not_to eq(r1)
+		end
 	end
 end

@@ -67,6 +67,18 @@ module Rope
       end
     end
 
+    #
+    # Freeze is redefined to freeze the subtree; used when dup'ing a Rope to protect against aliasing
+    #
+    def freeze
+      unless frozen?
+        super
+        @left.freeze  unless @left.frozen?
+        @right.freeze unless @right.frozen?
+      end
+      self
+    end
+
     # Rebalances this tree
     def rebalance!
       # TODO
@@ -106,6 +118,10 @@ module Rope
     # Returns self, however leaf nodes may return a new interior node if the replace! causes a leaf to be split
     #
     def replace!(index, length, substr)
+      # We may be frozen, so this all gets reified into a new node or overwrites on ourselves 
+      new_left  = @left
+      new_right = @right
+
       # Translate to positive index if given a negative one
       if index < 0
         index += @length
@@ -114,37 +130,41 @@ module Rope
       rindex = index - @left.length
       if(index == 0 && length == @left.length)
       	#substr exactly replaces left sub-tree
-      	@left = LeafNode.new(substr)
+      	new_left = LeafNode.new(substr)
       elsif(index == @left.length && length == @right.length)
       	#substr exactly replaces right sub-tree
-      	@right = LeafNode.new(substr)
+      	new_right = LeafNode.new(substr)
       elsif rindex < 0
       	if(index + length <= @left.length)
       		#Replacement segment is a subsection of the left tree
 	        
 	        #Requested index is in the left subtree, and a split may occur
-	        @left = @left.replace!(index, length, substr)
+	        new_left = @left.replace!(index, length, substr)
       	else
 	      	#Replacement segement is a subsection of left tree along with a subsection of the right tree
 	      	left_count = @left.length - index
 
-	      	@left = InteriorNode.new(
+	      	new_left = InteriorNode.new(
 	      		@left.subtree(0, index),
 	      		LeafNode.new(substr)
 	      	)
-	      	@right = @right.subtree(rindex + length, @right.length - (rindex + length))
+	      	new_right = @right.subtree(rindex + length, @right.length - (rindex + length))
 	      end
       else
         # Requested index is in the right subtree, and a split may occur
-        @right = @right.replace!(rindex, length, substr)
-        # Rope may get longer
-        @length = @left.length + @right.length 
+        new_right = @right.replace!(rindex, length, substr)
       end
 
-      #Length could have changed if the substr replaced a section of a different size or there was an append
-      @length = @left.length + @right.length
-      @depth = [left.depth, right.depth].max + 1
-      self
+      if(frozen?)
+        InteriorNode.new(new_left, new_right)
+      else
+        #Length could have changed if the substr replaced a section of a different size or there was an append
+        @left   = new_left
+        @right  = new_right
+        @length = @left.length + @right.length
+        @depth  = [left.depth, right.depth].max + 1
+        self
+      end
     end
   end
 end

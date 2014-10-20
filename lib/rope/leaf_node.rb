@@ -5,11 +5,14 @@ module Rope
 	class LeafNode < BasicNode
     extend Forwardable
 
+    # The underlying data in the tree
+    attr_reader :data
+
     def_delegator :@data, :slice
 
     # Initializes a node that contains a basic string
     def initialize(data)
-      @data = data
+      @data = data.freeze #Freezes the data to protect against aliasing errors
       @length = data.length
       @depth = 0
     end
