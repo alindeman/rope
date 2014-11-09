@@ -78,6 +78,10 @@ module Rope
     	self
     end
 
+
+    def <<(rhs)
+      self[length] = rhs
+    end
     protected
 
     # Root node (could either be a LeafNode or some child of LeafNode)

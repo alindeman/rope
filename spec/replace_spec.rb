@@ -43,4 +43,20 @@ describe Rope::Rope do
 			expect(r2).not_to eq(r1)
 		end
 	end
+
+	subject { "foo".to_rope }
+
+	describe "[self.length]=" do		
+		it "appends to the end of the rope" do
+			subject[subject.length] = "bar"
+			should eq "foobar"
+		end
+	end
+
+	describe "<<" do
+		it "appends to the end of the rope" do
+			subject <<  "bar"
+			should eq "foobar"
+		end
+	end
 end
