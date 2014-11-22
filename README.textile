@@ -67,3 +67,13 @@ puts rope.slice(3, 4) # 4567
 puts rope.slice(-6, 4) # 4567
 # TODO: More examples when they are implemented
 </pre>
+
+h3. Mutation
+
+A *Rope* instance reponds to []= similar to *String*. Mutations to the Rope do not modify the underlying *String* fragments that constitute the Rope.
+
+<pre>
+rope = "123456".to_rope
+rope[1,2] = "foo"
+puts rope # 1foo456
+</pre>

@@ -1,9 +1,9 @@
-require 'rope/node'
+require 'rope/basic_node'
 
 module Rope
   # Specifies an interior node.  Its underlying data is retrieved by combining
   # its children recursively.
-  class ConcatenationNode < Node
+	class InteriorNode < BasicNode
     # Left and right nodes
     attr_reader :left, :right
 
@@ -25,12 +25,12 @@ module Rope
     def slice(arg0, *args)
       if args.length == 0
         if arg0.is_a?(Fixnum)
-          char_at(arg0)
+          slice(arg0, 1)
         elsif arg0.is_a?(Range)
           from, to = arg0.minmax
 
           # Special case when the range doesn't actually describe a valid range
-          return "" if from.nil? || to.nil?
+          return nil if from.nil? || to.nil?
 
           # Normalize so both from and to are positive indices
           if from < 0
@@ -45,7 +45,7 @@ module Rope
           else
             # Range first is greater than range last
             # Return empty string to match what String does
-            ""
+            raise "TODO"
           end
         end
 
@@ -65,6 +65,18 @@ module Rope
 
         # TODO: arg0.is_a?(Regexp) && arg1.is_a?(Fixnum)
       end
+    end
+
+    #
+    # Freeze is redefined to freeze the subtree; used when dup'ing a Rope to protect against aliasing
+    #
+    def freeze
+      unless frozen?
+        super
+        @left.freeze  unless @left.frozen?
+        @right.freeze unless @right.frozen?
+      end
+      self
     end
 
     # Rebalances this tree
@@ -100,25 +112,59 @@ module Rope
       end
     end
 
-    # Returns the character at the specified index
-    def char_at(index)
+    #
+    # Overwrites data at index with substr
+    #
+    # Returns self, however leaf nodes may return a new interior node if the replace! causes a leaf to be split
+    #
+    def replace!(index, length, substr)
+      # We may be frozen, so this all gets reified into a new node or overwrites on ourselves 
+      new_left  = @left
+      new_right = @right
+
       # Translate to positive index if given a negative one
       if index < 0
         index += @length
       end
 
-      # Falls outside bounds
-      return nil if index >= @length
-
       rindex = index - @left.length
-      if rindex < 0
-        # Requested index is in the left subtree
-        @left.char_at(index)
+      if(index == 0 && length == @left.length)
+      	#substr exactly replaces left sub-tree
+      	new_left = LeafNode.new(substr)
+      elsif(index == @left.length && length == @right.length)
+      	#substr exactly replaces right sub-tree
+      	new_right = LeafNode.new(substr)
+      elsif rindex < 0
+      	if(index + length <= @left.length)
+      		#Replacement segment is a subsection of the left tree
+	        
+	        #Requested index is in the left subtree, and a split may occur
+	        new_left = @left.replace!(index, length, substr)
+      	else
+	      	#Replacement segement is a subsection of left tree along with a subsection of the right tree
+	      	left_count = @left.length - index
+
+	      	new_left = InteriorNode.new(
+	      		@left.subtree(0, index),
+	      		LeafNode.new(substr)
+	      	)
+	      	new_right = @right.subtree(rindex + length, @right.length - (rindex + length))
+	      end
       else
-        # Requested index is in the right subtree
-        @right.char_at(rindex)
+        # Requested index is in the right subtree, and a split may occur
+        new_right = @right.replace!(rindex, length, substr)
+      end
+
+      if(frozen?)
+        InteriorNode.new(new_left, new_right)
+      else
+        #Length could have changed if the substr replaced a section of a different size or there was an append
+        @left   = new_left
+        @right  = new_right
+        @length = @left.length + @right.length
+        @depth  = [left.depth, right.depth].max + 1
+        self
       end
     end
   end
 end
-

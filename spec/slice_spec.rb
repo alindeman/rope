@@ -1,7 +1,7 @@
 
 require 'rope'
 
-describe "rope" do
+describe Rope::Rope do
   describe "#slice" do
     context "Fixnum, Fixnum" do # slice(Fixnum, Fixnum)
       it "should return a slice for a Rope instance created with a String" do
@@ -46,8 +46,8 @@ describe "rope" do
         rope.slice(7).should == ?8
       end
 
-      it "should return a Fixnum instance" do
-        "12345".slice(0).class.should == Fixnum
+      it "should return a single character string" do
+        "12345".slice(0).should == "1"
       end
     end
 
